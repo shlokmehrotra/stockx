@@ -1,2 +1,0 @@
-API_key = c0lhegf48v6orbr1bmbg
-pipdi
