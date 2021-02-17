@@ -9,9 +9,9 @@ def price(company):
     page = urlopen(url)
 
     soup = bs4.BeautifulSoup(page,"html.parser")
-
-    price = soup.find("div",{"class": "My(6px) Pos(r) smartphone_Mt(6px)"}).find("span").text
-    if(price == ""):
+    try: 
+        price = soup.find("div",{"class": "My(6px) Pos(r) smartphone_Mt(6px)"}).find("span").text
+    except: 
         return -1
     print("price found for: " + str(company))
     return price
