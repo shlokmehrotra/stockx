@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<body>
+    <table border = 1> 
+        <tr> 
+            <td>username</td>
+            <td>email</td>
+            <td>pasword</td>
+        </tr> 
+        {% for user in userDetails %}
+        <tr>
+            <td> {{user[0]}}</td>
+            <td> {{user[1]}}</td>
+            <td> {{user[2]}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
