@@ -46,7 +46,18 @@ def display_users():
 def usercheck(decision):
     print(decision)
     if(decision == "signup"):
-        new_user(request.form)
+        rv = new_user(request.form) #outcomes - success, username, email, usernameemail
+        err_mess = ""
+        if(rv == "usernameemail"):
+            err_mess = "Username and email addresss are taken"
+        elif(rv == "email"):
+            err_mess = "Email is already taken"
+        elif(rv == "username"):
+            err_mess = "Username is already taken"
+        else:
+            return redirect("/")
+        return render_template("signup.html", error_message = err_mess)
+        print(rv)
     elif(decision == "login"):
         verify_user(request.form)
 
