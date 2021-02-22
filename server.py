@@ -1,5 +1,5 @@
 from flask import Flask
-from flask import request, redirect, render_template
+from flask import request, redirect, render_template, g, url_for
 from flask_mysqldb import MySQL
 import yaml
 
@@ -20,16 +20,32 @@ app.config["MYSQL_DB"] = db["db_name"]
 
 mysql = MySQL(app)
 '''
+
 from login_routes import new_user, verify_user
 
 @app.route("/")
 def index():
     return render_template("index.html")
 
-@app.route("/register")
+@app.route("/register/")
 def signup():
-    return render_template("signup.html")
-
+    if "auth_mess" not in g:
+        g.auth_mess = ""
+    return render_template("signup.html", error_message = g.auth_mess)
+@app.route("/register/<error>")
+def signuperr(error):
+    print("hello")
+    print(error)
+    err = ""
+    if(error == "usernameemail"):
+        err = "Username and email address are taken"
+    elif(error == "email"):
+        err = "Email is already taken"
+    elif(error == "username"):
+        err = "Username is already taken"
+    else:
+        return redirect("/")
+    return render_template("signup.html", error_message = err)
 @app.route("/login")
 def login():
     return render_template("login.html")
@@ -47,16 +63,8 @@ def usercheck(decision):
     print(decision)
     if(decision == "signup"):
         rv = new_user(request.form) #outcomes - success, username, email, usernameemail
-        err_mess = ""
-        if(rv == "usernameemail"):
-            err_mess = "Username and email addresss are taken"
-        elif(rv == "email"):
-            err_mess = "Email is already taken"
-        elif(rv == "username"):
-            err_mess = "Username is already taken"
-        else:
-            return redirect("/")
-        return render_template("signup.html", error_message = err_mess)
+        return redirect(url_for("signuperr", error = rv))
+        #return render_template("signup.html", error_message = err_mess)
         print(rv)
     elif(decision == "login"):
         verify_user(request.form)
